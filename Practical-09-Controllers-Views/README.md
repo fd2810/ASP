@@ -4,17 +4,32 @@
 
 ---
 
-## Step 1: Create Project
+## Step 1: Create the Project
 
-1. Create new project: **ASP.NET Web Application (.NET Framework)**
-2. Name: `StudentMVC`
-3. Template: **MVC** + No Authentication
+1. Open **Visual Studio 2019**.
+2. Click **Create a new project**.
+3. Search for: `ASP.NET Web Application`
+4. Select **ASP.NET Web Application (.NET Framework)**.
+5. Click **Next**.
+6. Configure:
+   - **Project name:** `StudentMVC`
+   - **Location:** Choose any folder
+   - **Framework:** .NET Framework 4.7.2
+7. Click **Create**.
+8. Select **MVC**.
+9. Leave Authentication as **No Authentication**.
+10. Click **Create**.
+
+Visual Studio creates the complete MVC project structure.
 
 ---
 
-## Step 2: Understand Existing HomeController
+## Step 2: Understand the Existing HomeController
 
-Open `Controllers/HomeController.cs`. You will see:
+1. In **Solution Explorer**, expand the **Controllers** folder.
+2. Double-click **HomeController.cs**.
+
+You will see code similar to this:
 
 ```csharp
 public ActionResult Index()
@@ -23,13 +38,26 @@ public ActionResult Index()
 }
 ```
 
-This returns the view `Views/Home/Index.cshtml`.
+This means: when someone opens `/Home/Index`, MVC will show the file `Views/Home/Index.cshtml`.
 
 ---
 
-## Step 3: Add Student Action in HomeController
+## Step 3: Add a New Action – Student()
 
-### Update `Controllers/HomeController.cs`
+1. Still inside `HomeController.cs`, add a new method below the existing ones:
+
+```csharp
+public ActionResult Student()
+{
+    ViewBag.Name = "Rahul";
+    ViewBag.Course = "B.Sc. Information Technology";
+    ViewBag.RollNo = 101;
+
+    return View();
+}
+```
+
+Your `HomeController` should now look like this (you can also copy the full file `HomeController.cs` from this folder):
 
 ```csharp
 using System.Web.Mvc;
@@ -57,14 +85,24 @@ namespace StudentMVC.Controllers
 
 ---
 
-## Step 4: Create Student View
+## Step 4: Create the View for Student Action
 
-1. Right-click inside the `Student()` method → **Add View**.
-2. View name: `Student`
-3. Template: **Empty (without model)**
+1. Inside `HomeController.cs`, **right-click** on the word `Student` (inside the method).
+2. Select **Add View...**
+3. In the dialog box:
+   - **View name:** `Student`
+   - **Template:** Empty (without model)
+   - Leave other options default
 4. Click **Add**.
 
-### File: `Views/Home/Student.cshtml`
+Visual Studio creates:
+```
+Views
+ └── Home
+      └── Student.cshtml
+```
+
+### Open `Views/Home/Student.cshtml` and replace everything with:
 
 ```html
 @{
@@ -77,15 +115,20 @@ namespace StudentMVC.Controllers
 <p><strong>Course:</strong> @ViewBag.Course</p>
 ```
 
+(You can also copy the file `Student.cshtml` from this folder.)
+
 ---
 
-## Step 5: Run
+## Step 5: Run and Test the First Page
 
-Press **Ctrl + F5**.
+1. Press **Ctrl + F5**.
+2. In the browser address bar type:
 
-Open: `http://localhost:xxxxx/Home/Student`
+```
+/Home/Student
+```
 
-**Output:**
+**Expected Output:**
 ```
 Student Information
 Name: Rahul
@@ -97,11 +140,18 @@ Course: B.Sc. Information Technology
 
 ## Step 6: Create a Second Controller
 
-1. Right-click **Controllers** → **Add → Controller**.
-2. Select **MVC 5 Controller - Empty**.
-3. Name: `StudentController`.
+1. In **Solution Explorer**, right-click the **Controllers** folder.
+2. Select **Add → Controller**.
+3. Choose **MVC 5 Controller - Empty**.
+4. Click **Add**.
+5. Enter name: `StudentController`
+6. Click **Add**.
 
-### File: `Controllers/StudentController.cs`
+---
+
+## Step 7: Add Actions to StudentController
+
+Open the new `StudentController.cs` and replace the code with:
 
 ```csharp
 using System.Web.Mvc;
@@ -127,13 +177,21 @@ namespace StudentMVC.Controllers
 }
 ```
 
+(You can copy the file `StudentController.cs` from this folder.)
+
 ---
 
-## Step 7: Create Details View
+## Step 8: Create the Details View
 
-Right-click `Details()` → **Add View** → Name: `Details` → Empty.
+1. Open `StudentController.cs`.
+2. Right-click inside the `Details()` method.
+3. Select **Add View...**
+4. Settings:
+   - **View name:** `Details`
+   - **Template:** Empty (without model)
+5. Click **Add**.
 
-### File: `Views/Student/Details.cshtml`
+### Open `Views/Student/Details.cshtml` and replace with:
 
 ```html
 @{
@@ -146,11 +204,14 @@ Right-click `Details()` → **Add View** → Name: `Details` → Empty.
 <p>Course: @ViewBag.Course</p>
 ```
 
+(You can copy the file `Details.cshtml` from this folder.)
+
 ---
 
-## Step 8: Link from Home Page
+## Step 9: Add a Link on the Home Page
 
-Open `Views/Home/Index.cshtml` and add:
+1. Open `Views/Home/Index.cshtml`.
+2. Add these lines:
 
 ```html
 <h2>Welcome to Student MVC Application</h2>
@@ -158,27 +219,41 @@ Open `Views/Home/Index.cshtml` and add:
 @Html.ActionLink("View Student Details", "Details", "Student")
 ```
 
----
-
-## Step 9: Test
-
-| URL                    | Result                          |
-|------------------------|---------------------------------|
-| `/Home/Student`        | Rahul's information             |
-| `/Student/Details`     | Priya's information             |
+This creates a nice link that goes to `/Student/Details`.
 
 ---
 
-## How MVC Flow Works
+## Step 10: Final Testing
+
+| URL you type              | What you should see                  |
+|---------------------------|--------------------------------------|
+| `/Home/Student`           | Rahul’s information                  |
+| `/Student/Details`        | Priya’s information                  |
+| Click the link on Home    | Same as `/Student/Details`           |
+
+---
+
+## How the Flow Works (Important to Understand)
 
 ```
-Browser → /Student/Details
-          ↓
-     StudentController
-          ↓
-      Details() action
-          ↓
-  Views/Student/Details.cshtml
-          ↓
-      HTML Response
+Browser types → /Student/Details
+                    ↓
+            StudentController
+                    ↓
+              Details() method
+                    ↓
+        Views/Student/Details.cshtml
+                    ↓
+              HTML shown to user
 ```
+
+---
+
+## Files in this Practical Folder
+
+| File                  | Where to put it              |
+|-----------------------|------------------------------|
+| `HomeController.cs`   | Controllers folder           |
+| `StudentController.cs`| Controllers folder           |
+| `Student.cshtml`      | Views/Home/                  |
+| `Details.cshtml`      | Views/Student/               |
